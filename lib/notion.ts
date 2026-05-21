@@ -1,6 +1,7 @@
 import { Client } from '@notionhq/client'
 import { NotionToMarkdown } from 'notion-to-md'
 import { marked } from 'marked'
+import DOMPurify from 'isomorphic-dompurify'
 import type { PostMeta, Post } from './types'
 
 const notion = new Client({ auth: process.env.NOTION_API_KEY })
@@ -59,7 +60,7 @@ export async function getPost(slug: string): Promise<Post | null> {
     const props = page.properties
     const mdBlocks = await n2m.pageToMarkdown(page.id)
     const mdString = n2m.toMarkdownString(mdBlocks)
-    const bodyHtml = await marked(mdString.parent ?? '')
+    const bodyHtml = DOMPurify.sanitize(await marked(mdString.parent ?? ''))
 
     return {
       id: page.id,

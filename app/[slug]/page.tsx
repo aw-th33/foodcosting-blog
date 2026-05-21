@@ -37,7 +37,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 
 export default async function ArticlePage({ params }: { params: { slug: string } }) {
   const post = await getPost('/' + params.slug)
-  if (!post) notFound()
+  if (!post) return notFound()
 
   const url = `https://blog.foodcosting.app/${params.slug}`
 
