@@ -54,7 +54,7 @@ export default async function ArticlePage({ params }: { params: { slug: string }
   }
 
   return (
-    <>
+    <div className="mx-auto max-w-[680px] px-4 py-10">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -95,6 +95,6 @@ export default async function ArticlePage({ params }: { params: { slug: string }
         <hr style={{ borderColor: 'var(--divider)', marginBottom: '2rem' }} />
         <ArticleBody html={post.bodyHtml} />
       </article>
-    </>
+    </div>
   )
 }

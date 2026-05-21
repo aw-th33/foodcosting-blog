@@ -21,7 +21,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className={`${inter.variable} ${ibmPlexMono.variable}`}>
       <body className="font-[var(--font-inter)] min-h-screen" style={{ backgroundColor: 'var(--paper)' }}>
         <Nav />
-        <main className="mx-auto max-w-[680px] px-4 py-10">
+        <main>
           {children}
         </main>
       </body>

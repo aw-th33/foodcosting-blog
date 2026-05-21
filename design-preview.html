@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blog Grid — 3 Design Directions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #111111;
+    --paper: #F8F6F0;
+    --receipt: #FFFFFF;
+    --faded: #6B6B66;
+    --divider: #DDD8CC;
+    --font-sans: 'Inter', sans-serif;
+    --font-mono: 'IBM Plex Mono', monospace;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    background: #E8E4DC;
+    color: var(--ink);
+    padding: 48px 24px;
+  }
+
+  /* ── GLOBAL CHROME ─────────────────────── */
+  .page-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--faded);
+    margin-bottom: 10px;
+  }
+
+  .direction-title {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--faded);
+    margin-bottom: 8px;
+  }
+
+  .direction-desc {
+    font-family: var(--font-sans);
+    font-size: 13px;
+    color: var(--faded);
+    margin-bottom: 28px;
+    line-height: 1.5;
+  }
+
+  .browser-chrome {
+    background: #D5D0C8;
+    border-radius: 10px 10px 0 0;
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .dot-r { background: #FF5F57; }
+  .dot-y { background: #FEBC2E; }
+  .dot-g { background: #28C840; }
+  .browser-url {
+    margin-left: 12px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--faded);
+    background: rgba(0,0,0,0.08);
+    padding: 3px 10px;
+    border-radius: 4px;
+  }
+
+  .preview-wrap {
+    background: var(--paper);
+    border-radius: 0 0 8px 8px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+    margin-bottom: 64px;
+  }
+
+  /* ── NAV (shared) ─────────────────────── */
+  .nav {
+    border-bottom: 1px solid var(--divider);
+    background: var(--receipt);
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    color: var(--ink);
+  }
+  .nav-badge {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 12px;
+    border: 2px solid var(--ink);
+    border-radius: 3px;
+    padding: 1px 5px;
+  }
+  .nav-wordmark {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.02em;
+  }
+  .nav-wordmark span { color: var(--faded); font-size: 0.85em; }
+  .nav-link {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--faded);
+    text-decoration: none;
+  }
+
+  .page-content {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 40px 24px 48px;
+  }
+
+  .index-header { margin-bottom: 36px; }
+  .index-header h1 {
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+  .index-header p {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--faded);
+  }
+
+  /* ════════════════════════════════════════
+     DIRECTION A — EDITORIAL LIST
+  ════════════════════════════════════════ */
+  .dir-a .post-row {
+    display: grid;
+    grid-template-columns: 80px 1fr 80px;
+    gap: 16px;
+    align-items: start;
+    padding: 20px 0;
+    border-top: 1px solid var(--divider);
+    text-decoration: none;
+    color: inherit;
+    transition: background 0.15s;
+  }
+  .dir-a .post-row:hover { background: rgba(0,0,0,0.015); margin: 0 -12px; padding-left: 12px; padding-right: 12px; }
+  .dir-a .post-row:last-child { border-bottom: 1px solid var(--divider); }
+
+  .dir-a .post-meta {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    color: var(--faded);
+    line-height: 1.4;
+    padding-top: 3px;
+  }
+  .dir-a .post-meta .day { font-size: 22px; font-weight: 700; color: var(--ink); display: block; line-height: 1; margin-bottom: 3px; font-family: var(--font-sans); }
+
+  .dir-a .post-body h2 {
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.25;
+    color: var(--ink);
+    margin-bottom: 6px;
+    letter-spacing: -0.01em;
+  }
+  .dir-a .post-body p {
+    font-size: 13px;
+    color: var(--faded);
+    line-height: 1.55;
+  }
+  .dir-a .post-thumb {
+    width: 80px;
+    height: 56px;
+    object-fit: cover;
+    border-radius: 3px;
+    display: block;
+    filter: grayscale(8%);
+  }
+  .dir-a .post-tag {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--faded);
+    background: var(--paper);
+    border: 1px solid var(--divider);
+    padding: 2px 6px;
+    border-radius: 2px;
+    display: inline-block;
+    margin-bottom: 8px;
+  }
+
+  /* ════════════════════════════════════════
+     DIRECTION B — FEATURED + GRID HYBRID
+  ════════════════════════════════════════ */
+  .dir-b .hero-card {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border: 1px solid var(--divider);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 32px;
+    background: var(--receipt);
+  }
+  .dir-b .hero-img {
+    width: 100%;
+    height: 240px;
+    object-fit: cover;
+    display: block;
+  }
+  .dir-b .hero-body {
+    padding: 28px 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .dir-b .hero-label {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--faded);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .dir-b .hero-label::before {
+    content: '';
+    display: inline-block;
+    width: 16px;
+    height: 1px;
+    background: var(--faded);
+  }
+  .dir-b .hero-body h2 {
+    font-size: 22px;
+    font-weight: 800;
+    line-height: 1.2;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+    margin-bottom: 12px;
+  }
+  .dir-b .hero-body p {
+    font-size: 13px;
+    color: var(--faded);
+    line-height: 1.6;
+    margin-bottom: 16px;
+  }
+  .dir-b .hero-cta {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .dir-b .hero-cta::after { content: '→'; }
+
+  .dir-b .grid-section-label {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--faded);
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--divider);
+  }
+
+  .dir-b .post-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .dir-b .grid-card {
+    background: var(--receipt);
+    border: 1px solid var(--divider);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .dir-b .grid-card img {
+    width: 100%;
+    height: 140px;
+    object-fit: cover;
+    display: block;
+  }
+  .dir-b .grid-card-body {
+    padding: 14px 16px 16px;
+  }
+  .dir-b .grid-card-date {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--faded);
+    margin-bottom: 7px;
+  }
+  .dir-b .grid-card h3 {
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.3;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+  }
+
+  /* ════════════════════════════════════════
+     DIRECTION C — COMPACT DIGEST
+  ════════════════════════════════════════ */
+  .dir-c .digest-header {
+    display: grid;
+    grid-template-columns: 90px 1fr 100px;
+    gap: 16px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--ink);
+    margin-bottom: 2px;
+  }
+  .dir-c .digest-header span {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--faded);
+  }
+
+  .dir-c .digest-row {
+    display: grid;
+    grid-template-columns: 90px 1fr 100px;
+    gap: 16px;
+    align-items: baseline;
+    padding: 13px 0;
+    border-bottom: 1px solid var(--divider);
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+    transition: background 0.12s;
+    border-radius: 2px;
+  }
+  .dir-c .digest-row:hover {
+    background: rgba(0,0,0,0.025);
+    margin: 0 -10px;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .dir-c .d-date {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--faded);
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+  }
+  .dir-c .d-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1.35;
+    letter-spacing: -0.01em;
+  }
+  .dir-c .d-excerpt {
+    font-size: 12px;
+    color: var(--faded);
+    line-height: 1.4;
+    margin-top: 3px;
+    font-style: italic;
+  }
+  .dir-c .d-tag {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--faded);
+    text-align: right;
+    padding: 2px 6px;
+    border: 1px solid var(--divider);
+    border-radius: 2px;
+    justify-self: end;
+    white-space: nowrap;
+  }
+
+  /* ── Current state comparison ── */
+  .current-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #999;
+    background: #DDD8CC;
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 2px;
+    margin-bottom: 6px;
+  }
+
+  .section-divider {
+    border: none;
+    border-top: 1px dashed #C8C2B8;
+    margin: 0 0 56px;
+  }
+
+  h2.section-title {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--faded);
+    margin-bottom: 40px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #C8C2B8;
+  }
+</style>
+</head>
+<body>
+
+<p class="page-label">foodcosting.app — Blog Index · 3 Design Directions</p>
+
+<!-- ══════════════════════════════════════════
+     DIRECTION A
+══════════════════════════════════════════ -->
+<p class="direction-title">Direction A — Editorial List</p>
+<p class="direction-desc">Lead with titles. Compact date column left, thumbnail right. Reads like a proper publication — dense, fast, content-first.</p>
+
+<div class="browser-chrome">
+  <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
+  <span class="browser-url">blog.foodcosting.app</span>
+</div>
+<div class="preview-wrap">
+  <nav class="nav">
+    <a class="nav-logo" href="#">
+      <span class="nav-badge">f</span>
+      <span class="nav-wordmark">foodcosting<span>.app</span></span>
+    </a>
+    <a class="nav-link" href="#">Blog</a>
+  </nav>
+  <div class="page-content dir-a">
+    <div class="index-header">
+      <h1>Food Cost & Menu Pricing</h1>
+      <p>Practical guides for food business owners</p>
+    </div>
+
+    <a class="post-row" href="#">
+      <div class="post-meta">
+        <span class="day">05</span>
+        May 2026
+      </div>
+      <div class="post-body">
+        <span class="post-tag">Food Costing</span>
+        <h2>Burger Cost Calculation: How to Price a Burger With Real Ingredient Costs</h2>
+        <p>Burger cost calculation only works when the beef yield is accurate and premium toppings are costed separately.</p>
+      </div>
+      <img class="post-thumb" src="https://res.cloudinary.com/dcqba0rmb/image/upload/w_160,h_112,c_fill/v1778001559/blog-covers/burger-cost-calculation.jpg" alt="">
+    </a>
+
+    <a class="post-row" href="#">
+      <div class="post-meta">
+        <span class="day">20</span>
+        Apr 2026
+      </div>
+      <div class="post-body">
+        <span class="post-tag">Catering</span>
+        <h2>How to Calculate Food Cost Per Person for Catering (With Real Numbers)</h2>
+        <p>Yield factors, waste buffers, and a 50-person worked example.</p>
+      </div>
+      <img class="post-thumb" src="https://res.cloudinary.com/dcqba0rmb/image/upload/w_160,h_112,c_fill/v1776840869/blog-covers/how-to-calculate-catering-food-cost-per-person.jpg" alt="">
+    </a>
+
+    <a class="post-row" href="#">
+      <div class="post-meta">
+        <span class="day">28</span>
+        Feb 2026
+      </div>
+      <div class="post-body">
+        <span class="post-tag">Calculators</span>
+        <h2>Restaurant Food Cost Calculator: A Complete Guide for Operators</h2>
+        <p>Calculate recipe costs, track price fluctuations, and stop profit leaks today.</p>
+      </div>
+      <img class="post-thumb" src="https://res.cloudinary.com/dcqba0rmb/image/upload/w_160,h_112,c_fill/v1776840862/blog-covers/restaurant-food-cost-calculator.jpg" alt="">
+    </a>
+
+    <a class="post-row" href="#">
+      <div class="post-meta">
+        <span class="day">28</span>
+        Feb 2026
+      </div>
+      <div class="post-body">
+        <span class="post-tag">Waste</span>
+        <h2>The Silent Margin Killer: How Waste is Inflating Your Food Cost</h2>
+        <p>Every night, a silent thief leaves your restaurant. Learn how food waste is stealing 5–10% of your total profit.</p>
+      </div>
+      <img class="post-thumb" src="https://res.cloudinary.com/dcqba0rmb/image/upload/w_160,h_112,c_fill/v1772256846/blog/how-waste-affects-food-cost.jpg" alt="">
+    </a>
+
+    <a class="post-row" href="#">
+      <div class="post-meta">
+        <span class="day">23</span>
+        Feb 2026
+      </div>
+      <div class="post-body">
+        <span class="post-tag">Profit</span>
+        <h2>Why Busy Restaurants Lose Money (And How to Fix It)</h2>
+        <p>That packed restaurant with lines out the door? It might be bleeding money.</p>
+      </div>
+      <img class="post-thumb" src="https://res.cloudinary.com/dcqba0rmb/image/upload/w_160,h_112,c_fill/v1772256834/blog/why-busy-restaurants-lose-money.jpg" alt="">
+    </a>
+
+    <a class="post-row" href="#">
+      <div class="post-meta">
+        <span class="day">19</span>
+        Feb 2026
+      </div>
+      <div class="post-body">
+        <span class="post-tag">Pricing</span>
+        <h2>The Complete Menu Pricing Formula Guide for Restaurants</h2>
+        <p>Food cost percentage, markup multipliers, prime cost methods, and psychological pricing.</p>
+      </div>
+      <img class="post-thumb" src="https://res.cloudinary.com/dcqba0rmb/image/upload/w_160,h_112,c_fill/v1776840838/blog-covers/menu-pricing-formula.jpg" alt="">
+    </a>
+
+  </div>
+</div>
+
+<hr class="section-divider">
+
+<!-- ══════════════════════════════════════════
+     DIRECTION B
+══════════════════════════════════════════ -->
+<p class="direction-title">Direction B — Featured + Grid Hybrid</p>
+<p class="direction-desc">Latest post gets hero treatment. Rest fall into a 2-column grid. Instant visual hierarchy — readers know what's newest.</p>
+
+<div class="browser-chrome">
+  <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
+  <span class="browser-url">blog.foodcosting.app</span>
+</div>
+<div class="preview-wrap">
+  <nav class="nav">
+    <a class="nav-logo" href="#">
+      <span class="nav-badge">f</span>
+      <span class="nav-wordmark">foodcosting<span>.app</span></span>
+    </a>
+    <a class="nav-link" href="#">Blog</a>
+  </nav>
+  <div class="page-content dir-b">
+    <div class="index-header">
+      <h1>Food Cost & Menu Pricing</h1>
+      <p>Practical guides for food business owners</p>
+    </div>
+
+    <!-- Hero -->
+    <a class="hero-card" href="#" style="text-decoration:none; color:inherit; display:grid;">
+      <img class="hero-img" src="https://res.cloudinary.com/dcqba0rmb/image/upload/w_600,h_480,c_fill/v1778001559/blog-covers/burger-cost-calculation.jpg" alt="">
+      <div class="hero-body">
+        <div class="hero-label">Latest Post · May 5, 2026</div>
+        <h2>Burger Cost Calculation: How to Price a Burger With Real Ingredient Costs</h2>
+        <p>Burger cost calculation only works when the beef yield is accurate and premium toppings are costed separately. A complete breakdown with real numbers.</p>
+        <span class="hero-cta">Read article</span>
+      </div>
+    </a>
+
+    <p class="grid-section-label">More Articles</p>
+
+    <div class="post-grid">
+      <a class="grid-card" href="#" style="text-decoration:none; color:inherit;">
+        <img src="https://res.cloudinary.com/dcqba0rmb/image/upload/w_400,h_280,c_fill/v1776840869/blog-covers/how-to-calculate-catering-food-cost-per-person.jpg" alt="">
+        <div class="grid-card-body">
+          <p class="grid-card-date">Apr 20, 2026</p>
+          <h3>How to Calculate Food Cost Per Person for Catering</h3>
+        </div>
+      </a>
+      <a class="grid-card" href="#" style="text-decoration:none; color:inherit;">
+        <img src="https://res.cloudinary.com/dcqba0rmb/image/upload/w_400,h_280,c_fill/v1776840862/blog-covers/restaurant-food-cost-calculator.jpg" alt="">
+        <div class="grid-card-body">
+          <p class="grid-card-date">Feb 28, 2026</p>
+          <h3>Restaurant Food Cost Calculator: A Complete Guide for Operators</h3>
+        </div>
+      </a>
+      <a class="grid-card" href="#" style="text-decoration:none; color:inherit;">
+        <img src="https://res.cloudinary.com/dcqba0rmb/image/upload/w_400,h_280,c_fill/v1772256846/blog/how-waste-affects-food-cost.jpg" alt="">
+        <div class="grid-card-body">
+          <p class="grid-card-date">Feb 28, 2026</p>
+          <h3>The Silent Margin Killer: How Waste is Inflating Your Food Cost</h3>
+        </div>
+      </a>
+      <a class="grid-card" href="#" style="text-decoration:none; color:inherit;">
+        <img src="https://res.cloudinary.com/dcqba0rmb/image/upload/w_400,h_280,c_fill/v1772256834/blog/why-busy-restaurants-lose-money.jpg" alt="">
+        <div class="grid-card-body">
+          <p class="grid-card-date">Feb 23, 2026</p>
+          <h3>Why Busy Restaurants Lose Money (And How to Fix It)</h3>
+        </div>
+      </a>
+      <a class="grid-card" href="#" style="text-decoration:none; color:inherit;">
+        <img src="https://res.cloudinary.com/dcqba0rmb/image/upload/w_400,h_280,c_fill/v1772256841/blog/food-cost-vs-markup.jpg" alt="">
+        <div class="grid-card-body">
+          <p class="grid-card-date">Feb 22, 2026</p>
+          <h3>Food Cost vs. Markup: The Hidden Math Killing Your Restaurant's Profit</h3>
+        </div>
+      </a>
+      <a class="grid-card" href="#" style="text-decoration:none; color:inherit;">
+        <img src="https://res.cloudinary.com/dcqba0rmb/image/upload/w_400,h_280,c_fill/v1776840838/blog-covers/menu-pricing-formula.jpg" alt="">
+        <div class="grid-card-body">
+          <p class="grid-card-date">Feb 19, 2026</p>
+          <h3>The Complete Menu Pricing Formula Guide for Restaurants</h3>
+        </div>
+      </a>
+    </div>
+
+  </div>
+</div>
+
+<hr class="section-divider">
+
+<!-- ══════════════════════════════════════════
+     DIRECTION C
+══════════════════════════════════════════ -->
+<p class="direction-title">Direction C — Compact Digest</p>
+<p class="direction-desc">No images. Date left, title centre, topic tag right. Fast to scan. Signals the writing is the product. Like Hacker News — but considered.</p>
+
+<div class="browser-chrome">
+  <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
+  <span class="browser-url">blog.foodcosting.app</span>
+</div>
+<div class="preview-wrap">
+  <nav class="nav">
+    <a class="nav-logo" href="#">
+      <span class="nav-badge">f</span>
+      <span class="nav-wordmark">foodcosting<span>.app</span></span>
+    </a>
+    <a class="nav-link" href="#">Blog</a>
+  </nav>
+  <div class="page-content dir-c">
+    <div class="index-header">
+      <h1>Food Cost & Menu Pricing</h1>
+      <p>Practical guides for food business owners</p>
+    </div>
+
+    <div class="digest-header">
+      <span>Date</span>
+      <span>Article</span>
+      <span style="text-align:right">Topic</span>
+    </div>
+
+    <a class="digest-row" href="#" style="text-decoration:none; color:inherit;">
+      <span class="d-date">May 5, 2026</span>
+      <div>
+        <div class="d-title">Burger Cost Calculation: How to Price a Burger With Real Ingredient Costs</div>
+        <div class="d-excerpt">Beef yield accuracy and premium toppings costed separately.</div>
+      </div>
+      <span class="d-tag">Costing</span>
+    </a>
+
+    <a class="digest-row" href="#" style="text-decoration:none; color:inherit;">
+      <span class="d-date">Apr 20, 2026</span>
+      <div>
+        <div class="d-title">How to Calculate Food Cost Per Person for Catering (With Real Numbers)</div>
+        <div class="d-excerpt">Yield factors, waste buffers, and a 50-person worked example.</div>
+      </div>
+      <span class="d-tag">Catering</span>
+    </a>
+
+    <a class="digest-row" href="#" style="text-decoration:none; color:inherit;">
+      <span class="d-date">Feb 28, 2026</span>
+      <div>
+        <div class="d-title">Restaurant Food Cost Calculator: A Complete Guide for Operators</div>
+        <div class="d-excerpt">Recipe costs, price fluctuations, and stopping profit leaks.</div>
+      </div>
+      <span class="d-tag">Tools</span>
+    </a>
+
+    <a class="digest-row" href="#" style="text-decoration:none; color:inherit;">
+      <span class="d-date">Feb 28, 2026</span>
+      <div>
+        <div class="d-title">The Silent Margin Killer: How Waste is Inflating Your Food Cost</div>
+        <div class="d-excerpt">Food waste stealing 5–10% of your total profit every night.</div>
+      </div>
+      <span class="d-tag">Waste</span>
+    </a>
+
+    <a class="digest-row" href="#" style="text-decoration:none; color:inherit;">
+      <span class="d-date">Feb 23, 2026</span>
+      <div>
+        <div class="d-title">Why Busy Restaurants Lose Money (And How to Fix It)</div>
+        <div class="d-excerpt">The hidden financial killers behind packed houses.</div>
+      </div>
+      <span class="d-tag">Profit</span>
+    </a>
+
+    <a class="digest-row" href="#" style="text-decoration:none; color:inherit;">
+      <span class="d-date">Feb 22, 2026</span>
+      <div>
+        <div class="d-title">Food Cost vs. Markup: The Hidden Math Killing Your Restaurant's Profit</div>
+        <div class="d-excerpt">Confusing these two causes an average 5–10% revenue leak.</div>
+      </div>
+      <span class="d-tag">Pricing</span>
+    </a>
+
+    <a class="digest-row" href="#" style="text-decoration:none; color:inherit;">
+      <span class="d-date">Feb 19, 2026</span>
+      <div>
+        <div class="d-title">The Complete Menu Pricing Formula Guide for Restaurants</div>
+        <div class="d-excerpt">Food cost %, markup multipliers, prime cost, psychological pricing.</div>
+      </div>
+      <span class="d-tag">Pricing</span>
+    </a>
+
+    <a class="digest-row" href="#" style="text-decoration:none; color:inherit;">
+      <span class="d-date">Feb 10, 2026</span>
+      <div>
+        <div class="d-title">Recipe Costing Example – Pizza (Complete Breakdown)</div>
+        <div class="d-excerpt">Real ingredient prices, yield calculations, menu pricing.</div>
+      </div>
+      <span class="d-tag">Recipe</span>
+    </a>
+
+    <a class="digest-row" href="#" style="text-decoration:none; color:inherit;">
+      <span class="d-date">Jan 22, 2026</span>
+      <div>
+        <div class="d-title">Ideal Food Cost Percentage</div>
+        <div class="d-excerpt">The target number your menu should hit if everything is controlled correctly.</div>
+      </div>
+      <span class="d-tag">Metrics</span>
+    </a>
+
+    <a class="digest-row" href="#" style="text-decoration:none; color:inherit;">
+      <span class="d-date">Jan 16, 2026</span>
+      <div>
+        <div class="d-title">Food Cost Percentage Formula</div>
+        <div class="d-excerpt">How much of your sales revenue is consumed by food.</div>
+      </div>
+      <span class="d-tag">Metrics</span>
+    </a>
+
+    <a class="digest-row" href="#" style="text-decoration:none; color:inherit;">
+      <span class="d-date">Dec 2025</span>
+      <div>
+        <div class="d-title">Food Cost Percentage</div>
+        <div class="d-excerpt">How much of your sales revenue is spent on ingredients.</div>
+      </div>
+      <span class="d-tag">Metrics</span>
+    </a>
+
+    <a class="digest-row" href="#" style="text-decoration:none; color:inherit;">
+      <span class="d-date">Nov 2025</span>
+      <div>
+        <div class="d-title">How to Calculate Food Cost</div>
+        <div class="d-excerpt">The difference between running a restaurant and reacting to one.</div>
+      </div>
+      <span class="d-tag">Costing</span>
+    </a>
+
+  </div>
+</div>
+
+</body>
+</html>
