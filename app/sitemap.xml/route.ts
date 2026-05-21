@@ -10,9 +10,10 @@ export async function GET() {
       const lastmod = post.publishedDate
         ? `<lastmod>${post.publishedDate}</lastmod>`
         : ''
+      const path = post.slug.startsWith('/') ? post.slug : `/${post.slug}`
       return `
     <url>
-      <loc>https://blog.foodcosting.app${post.slug}</loc>
+      <loc>https://blog.foodcosting.app${path}</loc>
       ${lastmod}
       <changefreq>monthly</changefreq>
     </url>`
