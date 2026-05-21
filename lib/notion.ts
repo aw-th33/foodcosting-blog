@@ -17,7 +17,7 @@ export async function getPosts(): Promise<PostMeta[]> {
   try {
     const response = await notion.databases.query({
       database_id: DB_ID,
-      filter: { property: 'Status', status: { equals: 'Published' } },
+      filter: { property: 'Status', select: { equals: 'Published' } },
       sorts: [{ property: 'Date', direction: 'descending' }],
     })
 
@@ -48,7 +48,7 @@ export async function getPost(slug: string): Promise<Post | null> {
       database_id: DB_ID,
       filter: {
         and: [
-          { property: 'Status', status: { equals: 'Published' } },
+          { property: 'Status', select: { equals: 'Published' } },
           { property: 'Slug', rich_text: { equals: slug } },
         ],
       },
