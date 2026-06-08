@@ -7,6 +7,15 @@ const nextConfig = {
       { protocol: 'https', hostname: '*.amazonaws.com' },
     ],
   },
+  async redirects() {
+    return [
+      {
+        source: '/workbook',
+        destination: '/workbook.html',
+        permanent: false,
+      },
+    ]
+  },
 }
 
 module.exports = nextConfig
