@@ -77,3 +77,44 @@ export async function getPost(slug: string): Promise<Post | null> {
     return null
   }
 }
+
+export async function getResources(): Promise<PostMeta[]> {
+  try {
+    const response = await notion.databases.query({
+      database_id: DB_ID,
+      filter: {
+        or: [
+          { property: 'Tags', multi_select: { contains: 'Tools' } },
+          { property: 'Tags', multi_select: { contains: 'Guides' } },
+          { property: 'Tags', multi_select: { contains: 'Fundamentals' } },
+        ],
+      },
+      sorts: [{ property: 'Date', direction: 'descending' }],
+    })
+
+    return response.results
+      .filter((page: any) => page.object === 'page')
+      .map((page: any) => {
+        const props = page.properties
+        const title = extractText(props['Title']?.title ?? [])
+        const status = props['Status']?.select?.name ?? ''
+        // Only include published + draft workbooks
+        if (status !== 'Published' && status !== 'Draft') return null
+        if (!title) return null
+
+        return {
+          id: page.id,
+          title,
+          slug: extractText(props['Slug']?.rich_text ?? []),
+          excerpt: extractText(props['Excerpt']?.rich_text ?? []),
+          featuredImage: props['Featured Image']?.url ?? '',
+          publishedDate: props['Date']?.date?.start ?? props['Published Date']?.date?.start ?? '',
+          targetKeyword: extractText(props['Target Keyword']?.rich_text ?? []),
+        }
+      })
+      .filter((post): post is PostMeta => post !== null && post.slug !== '')
+  } catch (e) {
+    console.error('[notion] getResources failed:', e)
+    return []
+  }
+}
