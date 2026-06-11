@@ -4,14 +4,14 @@ import type { PostMeta } from '@/lib/types'
 interface ResourceCardProps {
   post: PostMeta
   isWorkbook?: boolean
-  downloadUrl?: string
+  isCalculator?: boolean
   fileInfo?: string
 }
 
 export default function ResourceCard({
   post,
   isWorkbook = false,
-  downloadUrl,
+  isCalculator = false,
   fileInfo,
 }: ResourceCardProps) {
   return (
@@ -37,6 +37,18 @@ export default function ResourceCard({
           >
             Workbook
           </span>
+        ) : isCalculator ? (
+          <span
+            className="font-[var(--font-mono)] text-[10px] tracking-[0.08em] uppercase px-2 py-0.5"
+            style={{
+              background: '#d8e8ff',
+              color: '#2d5aa0',
+              borderRadius: 3,
+              fontWeight: 600,
+            }}
+          >
+            Calculator
+          </span>
         ) : (
           <span
             className="font-[var(--font-mono)] text-[10px] tracking-[0.08em] uppercase px-2 py-0.5"
@@ -52,6 +64,19 @@ export default function ResourceCard({
         )}
 
         {isWorkbook && (
+          <span
+            className="font-[var(--font-mono)] text-[10px] tracking-[0.08em] uppercase px-2 py-0.5"
+            style={{
+              background: '#d8f3dc',
+              color: '#2d6a4f',
+              borderRadius: 3,
+              fontWeight: 600,
+            }}
+          >
+            Free
+          </span>
+        )}
+        {isCalculator && (
           <span
             className="font-[var(--font-mono)] text-[10px] tracking-[0.08em] uppercase px-2 py-0.5"
             style={{
@@ -107,6 +132,22 @@ export default function ResourceCard({
             <line x1="12" y1="15" x2="12" y2="3" />
           </svg>
           Get Free Workbook
+        </Link>
+      ) : isCalculator ? (
+        <Link
+          href={post.slug}
+          className="inline-flex items-center gap-1.5 font-semibold text-sm w-fit mt-1 px-4 py-2"
+          style={{
+            background: 'var(--ink)',
+            color: 'var(--receipt)',
+            borderRadius: 4,
+            textDecoration: 'none',
+          }}
+        >
+          Open Calculator
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+            <polyline points="9 18 15 12 9 6" />
+          </svg>
         </Link>
       ) : (
         <Link

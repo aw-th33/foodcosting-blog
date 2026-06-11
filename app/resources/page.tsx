@@ -39,6 +39,69 @@ const WORKBOOK: PostMeta & { isWorkbook: boolean; fileInfo: string } = {
   fileInfo: 'Excel / Google Sheets · 66 KB · No signup required',
 }
 
+const CALCULATORS: (PostMeta & { isCalculator: boolean })[] = [
+  {
+    id: 'calc-food-cost',
+    title: 'Food Cost Calculator',
+    slug: '/resources/calculators/food-cost',
+    excerpt: 'Add ingredients, set portions, and get your cost per plate and suggested selling price instantly.',
+    featuredImage: '',
+    publishedDate: '',
+    targetKeyword: 'food cost calculator',
+    isCalculator: true,
+  },
+  {
+    id: 'calc-food-cost-pct',
+    title: 'Food Cost Percentage Calculator',
+    slug: '/resources/calculators/food-cost-percentage',
+    excerpt: 'Enter your food costs and revenue to see your percentage and how it compares to industry benchmarks.',
+    featuredImage: '',
+    publishedDate: '',
+    targetKeyword: 'food cost percentage calculator',
+    isCalculator: true,
+  },
+  {
+    id: 'calc-menu-pricing',
+    title: 'Menu Pricing Calculator',
+    slug: '/resources/calculators/menu-pricing',
+    excerpt: 'Three pricing methods: food cost, prime cost, and all-in. Set prices that protect your margins.',
+    featuredImage: '',
+    publishedDate: '',
+    targetKeyword: 'menu pricing calculator',
+    isCalculator: true,
+  },
+  {
+    id: 'calc-recipe-cost',
+    title: 'Recipe Cost Calculator',
+    slug: '/resources/calculators/recipe-cost',
+    excerpt: 'Cost any recipe down to the penny with pack sizes, quantities, yield, and waste built in.',
+    featuredImage: '',
+    publishedDate: '',
+    targetKeyword: 'recipe cost calculator',
+    isCalculator: true,
+  },
+  {
+    id: 'calc-profit-margin',
+    title: 'Restaurant Profit Margin Calculator',
+    slug: '/resources/calculators/profit-margin',
+    excerpt: 'See exactly where your money goes. Gross profit, net profit, and key ratios from your P&L.',
+    featuredImage: '',
+    publishedDate: '',
+    targetKeyword: 'restaurant profit margin calculator',
+    isCalculator: true,
+  },
+  {
+    id: 'calc-startup',
+    title: 'Restaurant Startup Cost Calculator',
+    slug: '/resources/calculators/startup-cost',
+    excerpt: 'Estimate your total opening costs with pre-filled US averages you can adjust to your concept.',
+    featuredImage: '',
+    publishedDate: '',
+    targetKeyword: 'restaurant startup cost calculator',
+    isCalculator: true,
+  },
+]
+
 export default async function ResourcesPage() {
   const notionResources = (await getResources()).filter(
     (post) => !SKIP_SLUGS.has(post.slug)
@@ -83,6 +146,11 @@ export default async function ResourcesPage() {
             isWorkbook
             fileInfo={WORKBOOK.fileInfo}
           />
+
+          {/* Calculators */}
+          {CALCULATORS.map((calc) => (
+            <ResourceCard key={calc.id} post={calc} isCalculator />
+          ))}
 
           {/* Notion resources */}
           {notionResources.map((post) => (
