@@ -29,7 +29,7 @@ const SKIP_SLUGS = new Set([
 const WORKBOOK: PostMeta & { isWorkbook: boolean; fileInfo: string } = {
   id: 'workbook',
   title: 'Recipe Costing & Menu Pricing Workbook',
-  slug: '/workbook',
+  slug: '/workbook.html',
   excerpt:
     'A free 7-tab workbook for Google Sheets and Excel. Calculate portion costs, build an ingredient library, and set menu prices that protect your margin.',
   featuredImage: '',
