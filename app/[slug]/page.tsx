@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import Image from 'next/image'
 import { getPosts, getPost } from '@/lib/notion'
 import ArticleBody from '@/components/ArticleBody'
+import CtaBanner from '@/components/CtaBanner'
 
 export const revalidate = 3600
 
@@ -13,18 +14,29 @@ export async function generateStaticParams() {
   }))
 }
 
+function seoTitle(title: string): string {
+  // Append brand for click-through in SERPs
+  const suffix = ' | foodcosting.app'
+  const maxLen = 60
+  if ((title + suffix).length <= maxLen) return title + suffix
+  // Truncate title to fit suffix
+  const trimmed = title.substring(0, maxLen - suffix.length - 1)
+  return trimmed + suffix
+}
+
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
   const post = await getPost('/' + params.slug)
   if (!post) return {}
 
   const url = `https://blog.foodcosting.app/${params.slug}`
+  const metaTitle = seoTitle(post.title)
 
   return {
-    title: post.title,
+    title: metaTitle,
     description: post.excerpt,
     alternates: { canonical: url },
     openGraph: {
-      title: post.title,
+      title: metaTitle,
       description: post.excerpt,
       url,
       siteName: 'foodcosting.app',
@@ -95,6 +107,7 @@ export default async function ArticlePage({ params }: { params: { slug: string }
         <hr style={{ borderColor: 'var(--divider)', marginBottom: '2rem' }} />
         <ArticleBody html={post.bodyHtml} />
       </article>
+      <CtaBanner />
     </div>
   )
 }
