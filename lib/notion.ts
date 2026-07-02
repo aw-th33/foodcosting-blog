@@ -13,6 +13,10 @@ function extractText(richText: any[]): string {
   return richText?.map((t: any) => t.plain_text).join('') ?? ''
 }
 
+function normalizeSlug(slug: string): string {
+  return slug.startsWith('/') ? slug : '/' + slug
+}
+
 export async function getPosts(): Promise<PostMeta[]> {
   try {
     const response = await notion.databases.query({
@@ -28,7 +32,7 @@ export async function getPosts(): Promise<PostMeta[]> {
         return {
           id: page.id,
           title: extractText(props['Title']?.title ?? []),
-          slug: extractText(props['Slug']?.rich_text ?? []),
+          slug: normalizeSlug(extractText(props['Slug']?.rich_text ?? [])),
           excerpt: extractText(props['Excerpt']?.rich_text ?? []),
           featuredImage: props['Featured Image']?.url ?? '',
           publishedDate: props['Date']?.date?.start ?? props['Published Date']?.date?.start ?? '',
@@ -43,13 +47,14 @@ export async function getPosts(): Promise<PostMeta[]> {
 }
 
 export async function getPost(slug: string): Promise<Post | null> {
+  const normalizedSlug = normalizeSlug(slug)
   try {
     const response = await notion.databases.query({
       database_id: DB_ID,
       filter: {
         and: [
           { property: 'Status', select: { equals: 'Published' } },
-          { property: 'Slug', rich_text: { equals: slug } },
+          { property: 'Slug', rich_text: { equals: normalizedSlug } },
         ],
       },
     })
