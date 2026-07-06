@@ -20,8 +20,16 @@ export default function CtaBanner() {
         className="text-sm mb-5 leading-relaxed"
         style={{ color: 'var(--faded)' }}
       >
-        Join restaurant owners using foodcosting.app to price menus, cost
-        recipes, and protect their margins — in minutes, not spreadsheets.
+        Join restaurant owners using the{' '}
+        <a
+          href="https://foodcosting.app"
+          className="font-semibold underline"
+          style={{ color: 'var(--ink)' }}
+        >
+          food costing app
+        </a>{' '}
+        to price menus, cost recipes, and protect their margins in minutes, not
+        spreadsheets.
       </p>
       <Link
         href="https://foodcosting.app"
