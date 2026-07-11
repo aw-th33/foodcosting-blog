@@ -12,8 +12,8 @@ const ibmPlexMono = IBM_Plex_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'Food Cost & Menu Pricing Blog | foodcosting.app',
-  description: 'Practical guides on food cost, menu pricing, and running a profitable food business.',
+  title: 'Food Costing App: Free Guides, Calculators & Menu Pricing for Restaurants | foodcosting.app',
+  description: 'Stop guessing your food costs. Free food costing guides, calculators, and menu pricing tools built for US restaurant owners, caterers, and food trucks.',
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

@@ -6,12 +6,12 @@ import GridCard from '@/components/GridCard'
 export const revalidate = 3600
 
 export const metadata: Metadata = {
-  title: 'Food Costing App: Guides, Calculators & Menu Pricing Tools | foodcosting.app',
-  description: 'Learn how to calculate food costs, price your menu, and protect your margins with the food costing app built for US restaurants, caterers, and food trucks.',
+  title: 'Food Costing App: Free Guides, Calculators & Menu Pricing Tools | foodcosting.app',
+  description: 'Stop losing money on every plate. Free food costing guides, calculators, and menu pricing tools built for US restaurant owners who want to price for profit — not guesswork.',
   alternates: { canonical: 'https://blog.foodcosting.app' },
   openGraph: {
-    title: 'Food Costing App: Guides, Calculators & Menu Pricing Tools',
-    description: 'Learn how to calculate food costs, price your menu, and protect your margins with the food costing app built for US food businesses.',
+    title: 'Food Costing App: Free Guides, Calculators & Menu Pricing Tools',
+    description: 'Stop losing money on every plate. Free food costing guides, calculators, and menu pricing tools for US restaurant owners.',
     url: 'https://blog.foodcosting.app',
     siteName: 'foodcosting.app',
     type: 'website',
