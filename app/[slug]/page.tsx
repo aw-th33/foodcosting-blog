@@ -19,8 +19,12 @@ function seoTitle(title: string): string {
   const suffix = ' | foodcosting.app'
   const maxLen = 60
   if ((title + suffix).length <= maxLen) return title + suffix
-  // Truncate title to fit suffix
-  const trimmed = title.substring(0, maxLen - suffix.length - 1)
+  // Truncate at word boundary to avoid mid-word cuts
+  let trimmed = title.substring(0, maxLen - suffix.length)
+  const lastSpace = trimmed.lastIndexOf(' ')
+  if (lastSpace > maxLen - suffix.length - 15) {
+    trimmed = trimmed.substring(0, lastSpace)
+  }
   return trimmed + suffix
 }
 
